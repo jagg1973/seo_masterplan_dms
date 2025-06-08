@@ -1,0 +1,537 @@
+/* admin/assets/css/admin_style.css */
+
+/* --- Defaults & Basic Typography --- */
+:root {
+    --default-primary-color: #007bff; /* Default blue, can be overridden by dynamic styles */
+    --default-primary-hover: #0056b3;
+    --default-danger-color: #dc3545;
+    --default-danger-hover: #c82333;
+    --default-secondary-color: #6c757d;
+    --default-secondary-hover: #545b62;
+
+    --admin-text-color: #343a40;
+    --admin-link-color: var(--default-primary-color);
+    --admin-background-color: #f4f7f9; /* Page background */
+    --admin-content-background: #ffffff; /* Background for containers like forms, tables */
+    --admin-border-color: #dee2e6; /* General border color */
+    --admin-light-border-color: #e9ecef; /* Lighter border for internal elements */
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    background-color: var(--admin-background-color);
+    color: var(--admin-text-color);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+a {
+    color: var(--admin-link-color);
+    text-decoration: none;
+}
+a:hover {
+    color: var(--default-primary-hover); /* Or a calculated darker shade of var(--admin-link-color) */
+    text-decoration: underline;
+}
+
+/* --- Main Admin Layout --- */
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* --- Sidebar --- */
+.admin-sidebar {
+    width: 250px;
+    background-color: #343a40; /* Dark sidebar */
+    color: #fff;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0; /* Prevent sidebar from shrinking */
+}
+
+.sidebar-header {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid #495057;
+}
+.sidebar-header h2 {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+.sidebar-header h2 a { /* For SITE_NAME link */
+    color: #fff;
+    text-decoration: none;
+}
+.sidebar-header img { /* For logo */
+    max-height: 50px;
+    max-width: 180px;
+    margin-bottom: 10px;
+}
+
+
+.sidebar-nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.sidebar-nav li a {
+    display: block;
+    padding: 14px 22px;
+    font-size: 0.98em;
+    color: #adb5bd; /* Lighter text for links */
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-left-color 0.2s ease-in-out;
+}
+
+.sidebar-nav li a:hover {
+    background-color: #495057;
+    color: #fff;
+    border-left-color: var(--default-primary-color); /* Use var if you make this dynamic */
+}
+
+.sidebar-nav li.active a {
+    background-color: var(--default-primary-color); /* Dynamic primary color will override via :root */
+    color: #fff;
+    font-weight: bold;
+    border-left-color: #fff; /* Or a contrasting color */
+}
+
+/* --- Main Content Area --- */
+.admin-main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden; /* Prevent horizontal scroll on main content if something overflows slightly */
+}
+
+.admin-header {
+    background-color: var(--admin-content-background);
+    padding: 15px 30px;
+    border-bottom: 1px solid var(--admin-border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+}
+
+.admin-header h1 {
+    margin: 0;
+    font-size: 1.75em;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-info span {
+    margin-right: 15px;
+    color: #555;
+    font-size: 0.95em;
+}
+
+.logout-btn { /* Also used for primary actions sometimes if .btn .btn-primary is not specific enough */
+    background-color: var(--default-primary-color);
+    color: white !important; /* Ensure text is white */
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+    border: 1px solid transparent;
+    transition: background-color 0.2s ease;
+}
+.logout-btn:hover {
+    background-color: var(--default-primary-hover);
+    text-decoration: none;
+}
+
+.admin-page-content {
+    padding: 25px 30px;
+    flex-grow: 1;
+    background-color: transparent; /* Body background will show */
+}
+
+.admin-page-content h3 { /* General subheadings for sections like "Existing Categories" */
+    font-size: 1.6em;
+    color: var(--admin-text-color);
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* --- Enhanced Form Styling --- */
+.form-container {
+    background-color: var(--admin-content-background);
+    padding: 25px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    max-width: 750px;
+    margin-bottom: 30px;
+    border: 1px solid var(--admin-light-border-color);
+}
+
+.form-container h3 { /* Title inside a form container */
+    font-size: 1.5em;
+    color: var(--admin-text-color);
+    margin-top: 0;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--admin-light-border-color);
+    padding-bottom: 15px;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #495057;
+    font-size: 0.95em;
+}
+
+.form-group label.required::after {
+    content: " *";
+    color: var(--default-danger-color);
+    font-weight: normal;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group input[type="file"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    line-height: 1.5;
+}
+
+.form-group select {
+    height: calc(1.5em + 20px + 2px); /* (line-height * font-size) + padding*2 + border*2 */
+}
+
+.form-group input[type="file"] {
+    padding: 8px 12px; /* Adjust default padding for file input */
+    line-height: 1.6;
+}
+.form-group .file-input-note {
+    font-size: 0.85em;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+.form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus,
+.form-group input[type="file"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--default-primary-color); /* Dynamic primary color via :root will override */
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.2); /* Default blue shadow, can be themed */
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #a0aec0;
+    opacity: 1; /* Firefox fix */
+}
+
+/* --- Button Styling --- */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    border: 1px solid transparent;
+    line-height: 1.5; /* Ensure consistent line height */
+}
+
+.btn-primary {
+    background-color: var(--default-primary-color); /* Dynamic primary color via :root will override */
+    border-color: var(--default-primary-color);   /* Dynamic primary color via :root will override */
+    color: white !important; /* Ensure text is white */
+}
+.btn-primary:hover {
+    background-color: var(--default-primary-hover); /* Needs dynamic hover if primary changes */
+    border-color: var(--default-primary-hover);
+}
+
+.btn-danger {
+    background-color: var(--default-danger-color);
+    border-color: var(--default-danger-color);
+    color: white !important;
+}
+.btn-danger:hover {
+    background-color: var(--default-danger-hover);
+    border-color: var(--default-danger-hover);
+}
+
+.btn-secondary {
+    background-color: var(--default-secondary-color);
+    border-color: var(--default-secondary-color);
+    color: white !important;
+}
+.btn-secondary:hover {
+    background-color: var(--default-secondary-hover);
+    border-color: var(--default-secondary-hover);
+}
+
+.form-container .btn {
+    margin-top: 10px;
+}
+.form-container .btn + .btn {
+    margin-left: 10px;
+}
+
+/* --- Enhanced Table Styling --- */
+.table-wrapper {
+    overflow-x: auto;
+    background-color: var(--admin-content-background);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 1px solid var(--admin-light-border-color);
+    margin-top: 25px;
+    margin-bottom: 30px;
+}
+
+.content-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95em;
+    color: var(--admin-text-color);
+}
+
+.content-table thead tr {
+    background-color: #f8f9fa; /* Light grey for header */
+    color: #495057;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid var(--admin-border-color);
+}
+/* Primary color override for table header if --admin-primary-color is set */
+:root[style*="--admin-primary-color"] .content-table thead tr {
+    background-color: var(--admin-primary-color, var(--default-primary-color)) !important; /* Use variable or default */
+    color: #ffffff !important;
+    border-bottom-color: var(--admin-primary-color, var(--default-primary-color)) !important;
+}
+
+
+.content-table th,
+.content-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--admin-light-border-color);
+    vertical-align: middle;
+}
+
+.content-table th {
+    white-space: nowrap;
+}
+
+.content-table tbody tr:last-of-type td {
+    border-bottom: none;
+}
+
+.content-table tbody tr:hover {
+    background-color: #f1f4f8;
+}
+
+.content-table .actions {
+    white-space: nowrap;
+    text-align: right;
+}
+
+.content-table .actions a {
+    margin-left: 12px;
+    margin-right: 0;
+    color: var(--admin-link-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+.content-table .actions a:first-child {
+    margin-left: 0;
+}
+.content-table .actions a.delete {
+    color: var(--default-danger-color);
+}
+.content-table .actions a:hover {
+    text-decoration: underline;
+}
+
+.empty-table-message {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: var(--admin-content-background);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 1px solid var(--admin-light-border-color);
+    margin-top: 25px;
+    color: #6c757d;
+    font-size: 1.1em;
+}
+
+/* --- Message Styling (Success/Error Banners) --- */
+.message {
+    padding: 15px 20px;
+    margin-bottom: 25px;
+    border-radius: 6px;
+    font-size: 1rem;
+    border-width: 1px;
+    border-style: solid;
+}
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+
+/* --- Custom Modal Styles --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none; /* Hidden by default, shown by JS */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+/* Add .active class by JS to show */
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content {
+    background-color: var(--admin-content-background);
+    padding: 25px 30px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 450px;
+    text-align: center;
+}
+
+.modal-content h4 { /* Modal Title */
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+    color: var(--admin-text-color);
+}
+
+.modal-content p { /* Modal Message */
+    margin-bottom: 25px;
+    font-size: 1.1em;
+    color: #555;
+    line-height: 1.6;
+}
+.modal-content p strong {
+    font-weight: 600;
+    color: var(--admin-text-color);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.modal-actions .btn {
+    padding: 10px 25px;
+    font-weight: 500;
+}
+
+
+/* --- Login Page Specific Styling --- */
+/* Add a body class to login.php e.g. <body class="login-page-body"> */
+.login-page-body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f7f9; /* Consistent with admin page background */
+    margin: 0;
+    padding: 20px; /* Add some padding for smaller screens */
+    box-sizing: border-box;
+}
+
+.login-container {
+    background-color: var(--admin-content-background);
+    padding: 30px 35px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px; /* Max width for the login box */
+    border: 1px solid var(--admin-light-border-color);
+}
+
+.login-container h2 {
+    text-align: center;
+    color: var(--admin-text-color);
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+    font-weight: 600;
+}
+
+.login-container .form-group {
+    margin-bottom: 20px; /* Consistent form group margin */
+}
+
+.login-container .form-group label {
+    font-weight: 500; /* Slightly less bold for login labels */
+    font-size: 0.9em;
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    /* Inherits from general form input styles, ensure padding is suitable */
+    padding: 12px 15px;
+}
+
+.login-container .btn-primary { /* Login button */
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 1.05em;
+    margin-top: 10px; /* Space above button */
+}
+
+.login-container .message.error { /* Error message on login page */
+    font-size: 0.9em;
+    padding: 10px 15px;
+}

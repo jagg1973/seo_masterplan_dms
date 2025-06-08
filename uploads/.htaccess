@@ -1,0 +1,14 @@
+# Prevent PHP execution
+<Files *.php>
+    deny from all
+</Files>
+
+# Optional: Prevent directory listing
+Options -Indexes
+
+# Optional: Force download for certain types or all files to prevent browser rendering issues
+# You might want to be more specific here or handle this via PHP headers when serving files.
+# <FilesMatch "\.(?i:pdf|doc|docx)$">
+#   ForceType application/octet-stream
+#   Header set Content-Disposition attachment
+# </FilesMatch>
