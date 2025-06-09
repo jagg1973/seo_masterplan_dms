@@ -1,0 +1,29 @@
+{
+    "name": "seo-masterplan-dms",
+    "version": "1.0.0",
+    "description": "SEO Masterplan Document Management System",
+    "main": "index.js",
+    "scripts": {
+        "dev": "php -S localhost:8000",
+        "build": "echo 'No build process needed for PHP project'",
+        "test": "vendor/bin/phpunit",
+        "lint": "php -l admin/*.php && php -l *.php"
+    },
+    "devDependencies": {
+        "tailwindcss": "^3.3.0",
+        "@tailwindcss/forms": "^0.5.0",
+        "autoprefixer": "^10.4.0",
+        "postcss": "^8.4.0"
+    },
+    "dependencies": {
+        "font-awesome": "^4.7.0"
+    },
+    "keywords": [
+        "php",
+        "document-management",
+        "seo",
+        "cms"
+    ],
+    "author": "SEO Masterplan Team",
+    "license": "MIT"
+}
