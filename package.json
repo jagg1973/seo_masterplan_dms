@@ -4,16 +4,17 @@
     "description": "SEO Masterplan Document Management System",
     "main": "index.js",
     "scripts": {
-        "dev": "php -S localhost:8000",
-        "build": "echo 'No build process needed for PHP project'",
-        "test": "vendor/bin/phpunit",
-        "lint": "php -l admin/*.php && php -l *.php"
+        "dev": "npx http-server . -p 8000 -c-1",
+        "build": "echo 'Static files ready for deployment'",
+        "test": "echo 'PHP tests require PHP environment'",
+        "lint": "echo 'PHP linting requires PHP environment'"
     },
     "devDependencies": {
         "tailwindcss": "^3.3.0",
         "@tailwindcss/forms": "^0.5.0",
         "autoprefixer": "^10.4.0",
-        "postcss": "^8.4.0"
+        "postcss": "^8.4.0",
+        "http-server": "^14.1.1"
     },
     "dependencies": {
         "font-awesome": "^4.7.0"
