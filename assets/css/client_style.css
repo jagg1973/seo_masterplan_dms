@@ -1,671 +1,164 @@
-/* assets/css/client_style.css - Light Theme */
+/*
+* ===================================================================
+* assets/css/client_style.css
+* DEFINITIVE & COMPLETE STYLESHEET
+* This file contains all styles for the entire client portal.
+* ===================================================================
+*/
 
+/* === Root Variables & Body === */
 :root {
-    /* Primary color will be set by inline style from PHP */
-    --primary-color: #007bff; /* Fallback default primary color */
-    --primary-hover-color: #0056b3; /* Fallback default primary hover */
-
-    --text-color: #212529; /* Dark grey for main text */
-    --text-muted-color: #6c757d; /* Lighter grey for secondary text */
-    --headings-color: #343a40; /* Slightly darker for headings */
-    --link-color: var(--primary-color);
-
-    --background-color: #f8f9fa;    /* Light grey page background */
-    --container-background: #ffffff; /* White for cards, header, etc. */
-    --border-color: #dee2e6;        /* Standard border color */
-    --light-border-color: #e9ecef;  /* Lighter border for internal elements */
-
-    --button-text-color: #ffffff;
+    --primary-color: #007bff;
+    --primary-hover-color: #0056b3;
+    --text-color: #212529;
+    --text-muted-color: #6c757d;
+    --headings-color: #1a253c;
+    --background-color: #f7f9fc;
+    --container-background: #ffffff;
+    --border-color: #e3e6f0;
+    --light-border-color: #edf2f9;
+    --neon-green: #00ff99;
+    --neon-purple: #9b59b6;
+    --neon-blue: #3498db;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     margin: 0;
-    padding: 0;
     background-color: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
 }
+.container { width: 90%; max-width: 1200px; margin: 0 auto; }
+h2.section-title { font-size: 1.8em; font-weight: 700; color: var(--headings-color); margin: 50px 0 25px 0; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
 
-.container {
-    width: 90%;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 20px 0;
-}
+/* === Header === */
+.client-header-redesigned { background-color: var(--container-background); padding: 15px 0; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
+.header-container { display: flex; align-items: center; justify-content: space-between; }
+.logo-and-title { display: flex; align-items: center; text-decoration: none; }
+.header-logo { max-height: 45px; margin-right: 15px; }
+.site-title { font-size: 1.5em; font-weight: 600; color: var(--headings-color); }
+.client-search-form { position: relative; flex-grow: 1; max-width: 450px; margin: 0 30px; }
+.client-search-form .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted-color); }
+.search-input { width: 100%; padding: 10px 15px 10px 40px; font-size: 1em; border: 1px solid var(--border-color); border-radius: 8px; transition: all 0.2s ease; }
+.search-input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0,123,255,0.15); outline: none; }
+.client-header-actions { display: flex; align-items: center; gap: 20px; }
+.welcome-message { display: flex; align-items: center; gap: 8px; color: var(--text-muted-color); }
+.btn-logout { background-color: var(--light-border-color); color: var(--text-color); padding: 8px 15px; border-radius: 6px; text-decoration: none; font-weight: 500; transition: all 0.2s ease; }
+.btn-logout:hover { background-color: #d3d9df; }
+.page-content { padding: 0; }
 
-/* --- Header --- */
-.client-header {
-    background-color: var(--container-background, #fff); /* Can also be a very light grey like #f8f9fa */
-    padding: 15px 0;
-    border-bottom: 1px solid var(--border-color, #dee2e6);
-    /* Removed general box-shadow from header for a flatter/cleaner look, or use a very subtle one */
-    /* box-shadow: 0 2px 4px rgba(0,0,0,0.03); */
-    position: sticky; /* Optional: makes header stick on scroll */
-    top: 0;
-    z-index: 900; /* Ensure it's above content but below modals */
-}
+/* === Professional Hero Section === */
+.hero-section-pro { position: relative; padding: 80px 40px; margin: 30px 0; border-radius: 16px; background-color: #0d1117; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+.hero-aurora { position: absolute; top: 0; left: 0; width: 100%; height: 100%; filter: blur(100px) saturate(150%); z-index: 1; }
+.hero-aurora::before, .hero-aurora::after { content: ''; position: absolute; width: 500px; height: 500px; border-radius: 50%; }
+.hero-aurora::before { background: var(--neon-green); top: -200px; left: -100px; animation: animate-aurora-1 18s infinite linear; }
+.hero-aurora::after { background: var(--neon-purple); bottom: -200px; right: -100px; animation: animate-aurora-2 18s infinite linear reverse; }
+@keyframes animate-aurora-1 { 0% { transform: translate(-100px, -50px) rotate(0deg); } 50% { transform: translate(400px, 150px) rotate(180deg); } 100% { transform: translate(-100px, -50px) rotate(360deg); } }
+@keyframes animate-aurora-2 { 0% { transform: translate(100px, 50px) rotate(0deg); } 50% { transform: translate(-400px, -150px) rotate(180deg); } 100% { transform: translate(100px, 50px) rotate(360deg); } }
+.hero-content { position: relative; z-index: 2; text-align: center; color: white; background: rgba(13, 17, 23, 0.5); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); padding: 40px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); }
+.hero-title { font-size: 2.8em; font-weight: 700; margin: 0 0 10px 0; }
+.hero-subtitle { font-size: 1.2em; opacity: 0.8; max-width: 600px; margin: 0 auto; }
 
-.client-header .container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* This will help distribute space */
-}
+/* === Animated Border Cards === */
+@property --angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+@keyframes animated-border-spin { to { --angle: 360deg; } }
+.dashboard-card.animated-border-card { position: relative; background-color: transparent; padding: 3px; border: none; border-radius: 14px; }
+.dashboard-card.animated-border-card::before { content: ''; position: absolute; top: 0; left: 0; z-index: 0; width: 100%; height: 100%; border-radius: 14px; background: conic-gradient(from var(--angle), var(--primary-color), var(--neon-purple), var(--neon-blue), var(--primary-color)); animation: animated-border-spin 4s linear infinite; }
+.card-content-wrapper { background: var(--container-background); border-radius: 12px; position: relative; z-index: 1; width: 100%; height: 100%; display: flex; flex-direction: column; }
+.dashboard-grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+.interactive-card .card-header { display: flex; align-items: center; padding: 20px; transition: background-color 0.2s ease; }
+a.card-header {text-decoration: none; color: inherit; }
+a.card-header:hover { background-color: #f8f9fa; }
+.card-header.is-container { cursor: default; }
+.interactive-card .card-icon-wrapper { font-size: 1.8em; color: var(--primary-color); margin-right: 15px; }
+.interactive-card .card-title { flex-grow: 1; text-align: left; font-size: 1.2em; font-weight: 600; }
+.toggle-children-btn { background: transparent; border: 1px solid var(--border-color); border-radius: 50%; width: 30px; height: 30px; font-size: 1em; cursor: pointer; color: var(--text-muted-color); transition: all 0.3s; }
+.toggle-children-btn:hover { color: var(--primary-color); background-color: var(--light-border-color); }
+.collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out; border-top: 1px solid var(--light-border-color); }
+.sub-card-container { padding: 15px 20px; }
+.interactive-sub-card { display: flex; align-items: center; padding: 10px; border-radius: 6px; margin-bottom: 5px; }
+.interactive-sub-card:hover { background-color: #f1f4f8; }
+.interactive-sub-card .sub-card-icon { margin-right: 10px; color: var(--text-muted-color); }
+.interactive-sub-card .sub-card-title { flex-grow: 1; font-weight: 500; }
+.sub-card-actions { display: flex; gap: 10px; margin-left: auto; }
+.btn-preview, .btn-download { font-size: 0.85em; padding: 6px 12px; text-decoration: none; border-radius: 5px; border: 1px solid var(--border-color); cursor: pointer; transition: all 0.2s ease; }
+.btn-preview { background-color: white; color: var(--text-color); }
+.btn-preview:hover { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
+.btn-download { background-color: #f8f9fa; color: var(--text-color); }
+.no-sub-items { padding: 15px; text-align: center; color: var(--text-muted-color); }
+.card-footer-actions { text-align: center; padding: 15px 20px; border-top: 1px solid var(--light-border-color); margin-top: auto; }
+.btn-download-folder { text-decoration: none; font-weight: 500; color: var(--text-muted-color); }
+.btn-download-folder:hover { color: var(--primary-color); }
 
-/* Logo and Site Title Group */
-.logo-and-title { /* Create this div in your PHP if logo and title aren't already grouped */
-    display: flex;
-    align-items: center;
-    text-decoration: none; /* If the group itself is a link */
-}
-.client-header .logo img {
-    max-height: 90px; /* Adjusted size */
-    margin-right: 12px;
-    /* filter: brightness(0) invert(1); /* Remove if your logo works on light backgrounds */
-}
-.client-header .site-title {
-    font-size: 1.5em; /* Slightly adjusted */
-    font-weight: 600; /* Can be 500 for a lighter feel */
-    color: var(--primary-color); /* Or var(--headings-color) */
-    text-decoration: none;
-    white-space: nowrap;
-}
-.client-header .site-title:hover {
-    color: var(--primary-hover-color); /* Or a darkened version of its base color */
-    text-decoration: none;
-}
+/* === Account & Support Page Styles === */
+.account-container { display: grid; grid-template-columns: 1fr; gap: 30px; max-width: 800px; margin: 30px auto; }
+.account-details-card { background: var(--container-background); padding: 30px 40px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+.account-details-card h3 { margin-top: 0; font-size: 1.5em; color: var(--headings-color); border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 25px; }
+.account-details-card p { margin: 0 0 15px; font-size: 1.1em; display: flex; }
+.account-details-card p strong { color: var(--headings-color); width: 120px; flex-shrink: 0; margin-right: 15px; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-weight: 500; margin-bottom: 8px; color: var(--text-color); }
+.form-group input[type="text"], .form-group input[type="email"], .form-group input[type="password"], .form-group textarea { width: 100%; padding: 12px; font-size: 1em; border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; transition: all 0.2s ease; }
+.form-group input:focus, .form-group textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0,123,255,0.15); outline: none; }
+.form-group input:disabled { background-color: #f8f9fa; cursor: not-allowed; color: #6c757d; }
+.message { padding: 15px; border-radius: 6px; margin-bottom: 20px; text-align: center; }
+.message.success { background-color: #d1e7dd; color: #0f5132; }
+.message.error { background-color: #f8d7da; color: #842029; }
 
+/* === Definitive Button Fix === */
+.dms-form-submit-button {
+    display: block !important; width: 100% !important; box-sizing: border-box !important; padding: 12px 20px !important; border-radius: 6px !important;
+    background: var(--primary-color) !important; border: 1px solid var(--primary-color) !important;
+    box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.3) !important; font-size: 1.1em !important; font-weight: 600 !important;
+    text-align: center !important; text-transform: uppercase !important; letter-spacing: 0.5px !important;
+    cursor: pointer !important; transition: all 0.3s ease !important;
+}
+.dms-form-submit-button:hover { background: var(--primary-hover-color) !important; border-color: var(--primary-hover-color) !important; box-shadow: 0 6px 20px -5px rgba(0, 0, 0, 0.4) !important; transform: translateY(-2px) !important; }
 
-/* Modern Search Form */
-.client-search-form {
-    display: flex;
-    align-items: center;
-    flex-grow: 1; /* Allows search to take available space */
-    margin-left: 25px; /* Space from logo/title */
-    margin-right: 25px; /* Space from user actions */
-    max-width: 500px; /* Or adjust as needed */
-}
-
-.search-input-wrapper {
-    position: relative;
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-}
-
-.search-icon {
-    position: absolute;
-    left: 15px; /* Position icon inside the input area */
-    color: var(--text-muted-color);
-    font-size: 0.9em;
-}
-
-.search-input,
-.client-search-form input[type="search"].search-input { /* Ensure specificity if needed */
-    width: 100%;
-    padding: 10px 15px 10px 40px; /* Left padding for icon */
-    font-size: 0.95em;
-    color: var(--text-color);
-    background-color: #f0f2f5; /* Slightly off-white background for input */
-    border: 1px solid transparent; /* Transparent border initially */
-    border-radius: 6px; /* Rounded corners for the whole search unit */
-    box-sizing: border-box;
-    line-height: 1.5;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-.search-input:focus {
-    background-color: var(--container-background);
-    border-color: var(--primary-color);
-    outline: 0;
-    box-shadow: 0 0 0 0.15rem rgba(<?php /* PHP primary color to RGB */ echo $primary_color_rgb_for_shadow; ?>, 0.15); /* Lighter focus shadow */
-}
-.search-input::placeholder {
-    color: var(--text-muted-color);
-    opacity: 0.9;
+/* ID-specific overrides for problematic buttons */
+/* These ensure the background and text color are applied with highest specificity */
+/* The .dms-form-submit-button class should still apply other styles like padding, font-size etc. */
+#supportSendRequestBtn,
+#accountUpdatePasswordBtn {
+    background: var(--primary-color) !important;
+    border-color: var(--primary-color) !important; /* Match border with background */
 }
 
-.search-submit-btn.btn-primary {
-    border-radius: 6px; /* Match input field */
-    padding: 10px 18px; /* Match input height */
-    font-size: 0.95em;
-    line-height: 1.5;
-    margin-left: -1px; /* Overlap slightly for integrated look if input has right border */
-    /* If input border is transparent, no overlap needed, or adjust border-radius for group effect */
-    border-top-left-radius: 0; /* If you want it to look like one unit */
-    border-bottom-left-radius: 0;
-    box-shadow: none; /* Remove shadow from button to make it flatter with input */
-}
-/* If search input has a visible border, and you want a "grouped" effect: */
-.search-input-wrapper + .search-submit-btn.btn-primary {
-    /* border-top-left-radius: 0; */ /* If search input is on left */
-    /* border-bottom-left-radius: 0; */
-}
-.search-input { /* Adjust if button is part of group */
-    /* border-top-right-radius: 0; */
-    /* border-bottom-right-radius: 0; */
-    /* border-right: none; */ /* If button provides the right border */
+/* Ensure hover styles for ID'd buttons also use variables */
+#supportSendRequestBtn:hover,
+#accountUpdatePasswordBtn:hover {
+    background: var(--primary-hover-color) !important;
+    border-color: var(--primary-hover-color) !important;
 }
 
 
-/* Client Actions (Welcome & Logout) */
-.client-header-actions {
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-}
-
-.welcome-message {
-    color: var(--text-muted-color);
-    font-size: 0.9em;
-    margin-right: 15px;
-}
-
-.client-header-actions .btn-secondary { /* Logout button */
-    font-size: 0.85em;
-    padding: 7px 14px; /* Slightly smaller */
-    background-color: #e9ecef; /* Light grey button */
-    border-color: #e9ecef;
-    color: var(--text-color) !important; /* Darker text */
-}
-.client-header-actions .btn-secondary:hover {
-    background-color: #d3d9df;
-    border-color: #d3d9df;
-}
-
-/* --- Button Styling (Light Theme) --- */
-.btn {
-    display: inline-block;
-    padding: 9px 18px; /* Adjusted padding */
-    border-radius: 5px;
-    text-decoration: none !important;
-    cursor: pointer;
-    font-weight: 500;
-    text-align: center;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
-    border: 1px solid transparent;
-    line-height: 1.5;
-    white-space: nowrap;
-    font-size: 0.95em;
-}
-.btn:active {
-    transform: translateY(1px);
-}
-
-.btn-primary {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-    color: var(--button-text-color) !important;
-}
-.btn-primary:hover {
-    background-color: var(--primary-hover-color); /* Needs a hover variable or calculated */
-    border-color: var(--primary-hover-color);
-    /* A simple way to darken for hover if no specific hover color variable: */
-    /* filter: brightness(90%); */
-}
-
-.btn-secondary {
-    background-color: #6c757d; /* Bootstrap's secondary grey */
-    border-color: #6c757d;
-    color: var(--button-text-color) !important;
-}
-.btn-secondary:hover {
-    background-color: #5a6268;
-    border-color: #545b62;
-}
-
-/* --- Dashboard: Titles & Category Cards --- */
-.dashboard-title {
-    font-size: 2em;
-    color: var(--headings-color);
-    margin-bottom: 30px;
-    text-align: left;
-    font-weight: 600;
-}
-
-.category-cards-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
-    margin-top: 20px;
-}
-
-.category-card {
-    background-color: var(--container-background);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 25px;
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.07);
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-}
-.category-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.card-icon { /* For future use with icons */
-    font-size: 2em;
-    margin-bottom: 15px;
-    color: var(--primary-color);
-    min-height: 30px;
-}
-
-.card-title {
-    font-size: 1.4em;
-    font-weight: 600;
-    color: var(--headings-color);
-    margin-top: 0;
-    margin-bottom: 10px;
-}
-
-.card-description {
-    font-size: 0.95em;
-    color: var(--text-muted-color);
-    line-height: 1.5;
-    margin-bottom: 20px;
-    flex-grow: 1;
-    min-height: 50px;
-}
-
-.card-button.btn-primary { /* Button on category cards */
-    padding: 10px 20px;
-    font-size: 0.9em;
-    font-weight: 500;
-    width: auto;
-    margin-top: auto;
-    align-self: flex-start;
-}
-
-/* --- Document View Page (view_documents.php) --- */
-.back-to-dashboard {
-    display: inline-block;
-    margin-bottom: 25px;
-    color: var(--link-color);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.95em;
-}
-.back-to-dashboard:hover {
-    text-decoration: underline;
-}
-
-.page-title { /* Category name on view_documents.php */
-    font-size: 1.8em;
-    color: var(--headings-color);
-    margin-bottom: 10px;
-    font-weight: 600;
-    border-bottom: 1px solid var(--light-border-color);
-    padding-bottom: 15px;
-}
-.category-page-description {
-    font-size: 1em;
-    color: var(--text-muted-color);
-    margin-bottom: 25px;
-    line-height: 1.7;
-}
-
-/* Document List & Items */
-.document-list {
-   list-style: none;
-    padding: 0;
-    margin-top: 20px;
-    display: grid; /* Use CSS Grid */
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive columns */
-    /* minmax(300px, 1fr) means cards will be at least 300px wide,
-       and will take up 1 fraction of the available space.
-       Adjust 300px based on how many cards you want per row on average. */
-    gap: 25px; /* Space between cards */
-}
-
-.document-item {
-    background-color: var(--container-background);
-    border: 1px solid var(--border-color);
-    border-radius: 8px; /* Consistent with category cards */
-    padding: 20px 25px;
-    /* margin-bottom: 25px; Remove this, as 'gap' from grid handles spacing */
-    box-shadow: 0 3px 8px rgba(0,0,0,0.07); /* Slightly more pronounced shadow */
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-}
-
-.document-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 12px rgba(0,0,0,0.1);
-}
-
-.document-item h4 { /* Document Title */
-    margin: 0 0 10px 0;
-    font-size: 1.15em; /* Adjust for card layout */
-    font-weight: 600;
-    line-height: 1.3;
-}
-.document-item h4 a {
-    text-decoration: none;
-    color: var(--headings-color);
-}
-.document-item h4 a:hover {
-    color: var(--primary-color);
-    text-decoration: underline;
-}
-
-.document-meta {
-    font-size: 0.8em;
-    color: var(--text-muted-color);
-    margin-bottom: 12px;
-    line-height: 1.5;
-}
-.document-meta span {
-    margin-right: 18px;
-    white-space: nowrap;
-    display: inline-block;
-    margin-bottom: 5px;
-}
-.document-meta strong {
-    font-weight: 600;
-    color: var(--text-color);
-}
-
-.document-description {
-    font-size: 0.95em;
-    color: var(--text-color);
-    margin-bottom: 18px;
-    line-height: 1.6;
-    flex-grow: 1;
-}
-
-.document-actions {
-    margin-top: auto; /* Pushes actions to the bottom of the card */
-    padding-top: 10px;
-    align-self: flex-start; /* Align button to the left within its space */
-}
-
-.download-button { /* For individual document download */
-    display: inline-block;
-    background-color: var(--primary-color);
-    color: var(--button-text-color) !important;
-    padding: 7px 15px; /* Slightly smaller padding for card button */
-    text-decoration: none !important;
-    border-radius: 5px;
-    font-size: 0.85em; /* Slightly smaller font for card button */
-    font-weight: 500; /* Adjusted weight */
-    transition: background-color 0.2s ease, transform 0.1s ease;
-    border: 1px solid transparent;
-}
-.download-button:hover {
-    background-color: var(--primary-hover-color);
-    color: var(--button-text-color) !important;
-    transform: translateY(-1px);
-}
-.document-icon-type {
-    font-size: 1.8em; /* Adjust icon size */
-    margin-bottom: 10px;
-    /* color: var(--primary-accent-color); /* Or specific colors per file type below */
-    text-align: left; /* Or center if you prefer */
-    line-height: 1; /* Prevent extra space */
-}
-
-/* Optional: Specific colors for file types - you can expand this */
-.document-icon-type .fa-file-pdf { color: #E62A2A; } /* Red for PDF */
-.document-icon-type .fa-file-word { color: #2B579A; } /* Blue for Word */
-.document-icon-type .fa-file-excel { color: #1D6F42; } /* Green for Excel */
-.document-icon-type .fa-file-powerpoint { color: #D04423; } /* Orange for PowerPoint */
-.document-icon-type .fa-figma { color: #F24E1E; } /* Figma orange/red */
-.document-icon-type .fa-file-image { color: #007bff; } /* Blue for images */
-.document-icon-type .fa-file-archive { color: #FFC107; } /* Yellow for archives */
-.document-icon-type .fa-file, .document-icon-type .fa-file-alt, .document-icon-type .fa-file-dashed-line { color: var(--text-secondary); } /* Default/generic */
-
-/* --- Footer --- */
-.client-footer {
-    text-align: center;
-    padding: 30px 0;
-    margin-top: 40px;
-    border-top: 1px solid var(--border-color);
-    font-size: 0.9em;
-    color: var(--text-muted-color);
-}
-
-/* --- Login Page Specific (client_login.php) --- */
-body.client-login-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: var(--background-color);
-    padding: 20px;
-    box-sizing: border-box;
-}
-.login-form-container {
-    background-color: var(--container-background);
-    padding: 30px 40px;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    width: 100%;
-    max-width: 420px;
-    border: 1px solid var(--border-color);
-}
-.login-form-container h2 {
-    text-align: center;
-    color: var(--primary-color);
-    margin-top: 0;
-    margin-bottom: 25px;
-    font-size: 1.8em;
-}
-.login-form-container .form-group { margin-bottom: 20px; }
-.login-form-container .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #495057; }
-.login-form-container input[type="email"], .login-form-container input[type="password"] {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    box-sizing: border-box;
-    font-size: 1rem;
-}
-.login-form-container input:focus {
-    border-color: var(--primary-color);
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25); /* Default blue shadow, adjust if primary changes drastically */
-}
-.login-form-container .btn-submit-login { /* Renamed from btn-primary to be more specific if needed */
-    width: 100%;
-    padding: 12px;
-    background-color: var(--primary-color);
-    color: var(--button-text-color);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.05em;
-    font-weight: 500;
-    transition: background-color 0.2s ease;
-}
-.login-form-container .btn-submit-login:hover {
-    background-color: var(--primary-hover-color);
-    /* filter: brightness(90%); */
-}
-.login-form-container .error-message {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-    padding: 10px 15px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    text-align: center;
-    font-size: 0.95em;
-}
-.client-login-logo { text-align: center; margin-bottom: 20px; }
-.client-login-logo img { max-height: 50px; }
-
-.client-search-form {
-    display: flex;
-    align-items: center;
-}
-
-.client-search-form input[type="search"] {
-    padding: 9px 14px;
-    font-size: 0.9em;
-    font-family: inherit;
-    color: var(--text-color);
-    background-color: var(--container-background); /* Or a slightly different shade */
-    border: 1px solid var(--border-color);
-    border-radius: 5px 0 0 5px; /* Rounded left corners */
-    box-sizing: border-box;
-    line-height: 1.5;
-    flex-grow: 1;
-    border-right: none; /* Button will form the right border */
-}
-.client-search-form input[type="search"]:focus {
-    border-color: var(--primary-color);
-    outline: 0;
-    box-shadow: 0 0 0 0.15rem rgba(0,123,255,.2); /* Lighter focus shadow */
-}
-
-.client-search-form input[type="search"]::placeholder {
-    color: var(--text-muted-color);
-    opacity: 0.8;
-}
-.client-search-form button[type="submit"].btn-primary {
-    border-radius: 0 5px 5px 0;
-    padding: 9px 15px; /* Match input padding for height */
-    font-size: 0.9em; /* Match input font size */
-    line-height: 1.5; /* Match input line height */
-    box-shadow: none; /* Remove button default shadow if any */
-}
-
-/* Add to client_style.css if you want to customize highlight */
-mark {
-    background-color: #FFD700; /* Gold, or use a variable */
-    padding: 0.1em 0.2em;
-    border-radius: 3px;
-    color: #000; /* Ensure text on highlight is readable */
-}
-
-/* assets/css/client_style.css */
-
-/* ... (Keep all your other existing styles for :root, body, container, header, buttons, cards, etc.) ... */
-
-/* --- General Modal Overlay Style (Used by Delete Modal and View Modal) --- */
-.modal-overlay {
-    position: fixed; /* Crucial: This makes it an overlay */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.65); /* Semi-transparent background, slightly darker */
-    display: none; /* Hidden by default, JS will change to 'flex' to show */
-    justify-content: center; /* Centers .modal-content horizontally */
-    align-items: center;   /* Centers .modal-content vertically */
-    z-index: 1000;         /* Ensures it's on top of other content */
-    padding: 20px;         /* Add some padding for smaller screens so modal doesn't touch edges */
-    box-sizing: border-box;
-}
-/* JavaScript will set 'display: flex;' on this class when modal is active */
-
-
-/* General Modal Content Box Style */
-.modal-content { /* This is used by the delete modal, view modal adds its own class too */
-    background-color: var(--container-background); /* Or your theme's equivalent for white/light */
-    padding: 25px 30px;
-    border-radius: 8px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-    width: 90%;
-    max-width: 500px; /* Default max-width, view modal will override */
-    text-align: center; /* Default for simple modals like delete confirm */
-    position: relative; /* For positioning close button if needed */
-    overflow-y: auto; /* If modal content itself is too tall */
-    max-height: 90vh; /* Prevent modal from being taller than viewport */
-}
-
-
-/* --- Document View Modal Specific Styles --- */
-.document-viewer-modal-content { /* Specific class for the document view modal's content box */
-    max-width: 850px; /* Allow for wider content like PDFs */
-    min-height: 75vh; /* Make it reasonably tall */
-    max-height: 85vh; /* Consistent max height */
-    display: flex;
-    flex-direction: column;
-    text-align: left; /* Override default centered modal text */
-    padding: 0; /* Remove padding if header/body/footer handle it */
-}
-
-.document-viewer-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px; /* Padding for header */
-    border-bottom: 1px solid var(--border-color);
-}
-
-.document-viewer-header h4 { /* Modal Title */
-    margin: 0;
-    font-size: 1.3em;
-    color: var(--headings-color); /* Or your theme's heading text color */
-    font-weight: 600;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.close-modal-btn { /* 'X' button */
-    background: none;
-    border: none;
-    font-size: 2.2em;
-    font-weight: 300;
-    line-height: 1;
-    color: var(--text-muted-color); /* Or your theme's secondary/muted text color */
-    cursor: pointer;
-    padding: 0 5px;
-}
-.close-modal-btn:hover {
-    color: var(--text-color); /* Or your theme's primary text color */
-}
-
-.document-viewer-body {
-    flex-grow: 1;
-    overflow-y: auto;
-    background-color: #e8edf3; /* Slightly different background for the content area (light theme) */
-    /* For dark theme, this would be a slightly different dark: var(--background-tertiary); */
-    border: 1px solid var(--border-color); /* Consistent border */
-    border-radius: 0; /* No radius if it's meant to fill space between header/footer */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 5px; /* Small padding around the embedded content */
-    min-height: 0; /* Override browser default for flex children if any */
-}
-
-.document-viewer-body iframe,
-.document-viewer-body embed {
-    width: 100%;
-    height: 100%;
-    min-height: calc(75vh - 120px); /* Approximate height: modal min-height - header/footer heights */
-    border: none;
-}
-
-.document-viewer-body img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    display: block;
-    margin: auto;
-}
-
-.document-viewer-body .preview-not-available {
-    padding: 30px 20px;
-    text-align: center;
-    font-size: 1.1em;
-    color: var(--text-muted-color);
-}
-.document-viewer-body .preview-not-available strong {
-    color: var(--text-color);
-}
-
-.document-viewer-footer {
-    padding: 15px 20px;
-    margin-top: 0; /* Remove margin if body has padding */
-    border-top: 1px solid var(--border-color);
-    text-align: right;
-}
-
-/* ... (Keep your .document-actions .btn-secondary styles for the "View" button itself) ... */
+/* === Footer, Modal & Other Components === */
+.client-footer-redesigned { background-color: #2c3e50; color: #bdc3c7; padding-top: 50px; margin-top: 60px; }
+.footer-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+.footer-col h4 { font-size: 1.2em; color: white; margin-bottom: 20px; }
+.footer-col p, .footer-col ul { margin: 0; padding: 0; list-style: none; }
+.footer-col ul li { margin-bottom: 10px; }
+.footer-col ul a { color: #bdc3c7; text-decoration: none; transition: color 0.2s; }
+.footer-col ul a:hover { color: white; }
+.footer-col ul i { margin-right: 10px; width: 20px; text-align: center; }
+.social-icons { margin-top: 20px; display: flex; gap: 15px; }
+.social-icons a { color: #bdc3c7; font-size: 1.2em; text-decoration: none; transition: color 0.2s; }
+.social-icons a:hover { color: var(--primary-color); }
+.footer-bottom { text-align: center; padding: 20px 0; margin-top: 40px; border-top: 1px solid #34495e; }
+.footer-bottom p { margin: 0; font-size: 0.9em; }
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.65); display: none; justify-content: center; align-items: center; z-index: 1050; padding: 20px; box-sizing: border-box; }
+.modal-content { background-color: var(--container-background); padding: 0; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); width: 90%; text-align: left; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+.document-viewer-modal-content { max-width: 900px; height: 90vh; }
+.document-viewer-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid var(--border-color); }
+.document-viewer-header h4 { margin: 0; font-size: 1.3em; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.close-modal-btn { background: none; border: none; font-size: 2.2em; font-weight: 300; line-height: 1; color: var(--text-muted-color); cursor: pointer; padding: 0 5px; }
+.close-modal-btn:hover { color: var(--text-color); }
+.document-viewer-body { flex-grow: 1; overflow-y: auto; background-color: #525659; }
+.document-viewer-body iframe, .document-viewer-body embed { width: 100%; height: 100%; border: none; }
+.document-viewer-body img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; margin: auto; }
+.preview-loading, .preview-not-available { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; padding: 40px; text-align: center; color: white; }
+.preview-not-available strong { font-size: 1.2em; margin-bottom: 10px; }
+.document-viewer-footer { padding: 15px 20px; border-top: 1px solid var(--border-color); text-align: right; }
+.document-viewer-footer .btn-primary { padding: 8px 16px; font-size: 0.9em; }
+.document-viewer-footer .btn-primary .fas { margin-right: 8px; }

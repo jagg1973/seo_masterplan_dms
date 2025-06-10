@@ -62,6 +62,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $posted_action_type = $_POST['action_type'] ?? 'add';
     $posted_document_id = isset($_POST['document_id']) ? (int)$_POST['document_id'] : null;
     $current_user_id = $_SESSION['user_id'];
+    $form_parent_id = !empty($_POST['parent_id']) ? (int)$_POST['parent_id'] : null;
+    $form_display_order = isset($_POST['display_order']) ? (int)$_POST['display_order'] : 0;
 
     // Initialize arrays for collecting messages for batch uploads
     $batch_success_messages = [];
@@ -130,8 +132,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $stmt_old_doc->execute([$posted_document_id]);
                         $old_doc_data = $stmt_old_doc->fetch();
 
-                        $sql = "UPDATE documents SET category_id = ?, title = ?, description = ?, filename_orig = ?, filename_sys = ?, filepath = ?, filetype = ?, filesize = ?, version = ?, language = ?, user_id = ? WHERE id = ?";
-                        $params = [$form_category_id, $current_form_title, $form_description, $current_filename_orig, $current_filename_sys, $current_filepath, $current_filetype, $current_filesize, $form_version, $form_language, $current_user_id, $posted_document_id];
+                        $sql = "UPDATE documents SET category_id = ?, title = ?, description = ?, filename_orig = ?, filename_sys = ?, filepath = ?, filetype = ?, filesize = ?, version = ?, language = ?, user_id = ?, parent_id = ?, display_order = ? WHERE id = ?";
+$params = [
+    $form_category_id,
+    $current_form_title,
+    $form_description,
+    $current_filename_orig,
+    $current_filename_sys,
+    $current_filepath,
+    $current_filetype,
+    $current_filesize,
+    $form_version,
+    $form_language,
+    $current_user_id,
+    $form_parent_id,      // New value for parent_id
+    $form_display_order,  // New value for display_order
+    $posted_document_id
+];
                         
                         $stmt_update = $pdo->prepare($sql);
                         $stmt_update->execute($params);
@@ -146,10 +163,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $action = 'view'; // Go back to list view after update
 
                     } elseif ($posted_action_type === 'add') {
-                        $sql = "INSERT INTO documents (category_id, user_id, title, description, filename_orig, filename_sys, filepath, filetype, filesize, version, language)
-                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                        $stmt_insert = $pdo->prepare($sql);
-                        $stmt_insert->execute([$form_category_id, $current_user_id, $current_form_title, $form_description, $current_filename_orig, $current_filename_sys, $current_filepath, $current_filetype, $current_filesize, $form_version, $form_language]);
+                        $sql = "INSERT INTO documents (category_id, user_id, title, description, filename_orig, filename_sys, filepath, filetype, filesize, version, language, parent_id, display_order)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"; // Added two placeholders
+$stmt_insert = $pdo->prepare($sql);
+$stmt_insert->execute([
+    $form_category_id,
+    $current_user_id,
+    $current_form_title,
+    $form_description,
+    $current_filename_orig,
+    $current_filename_sys,
+    $current_filepath,
+    $current_filetype,
+    $current_filesize,
+    $form_version,
+    $form_language,
+    $form_parent_id,       
+    $form_display_order  
+]);
                         $batch_success_messages[] = "Document '{$current_filename_orig}' uploaded successfully!";
                     }
                 } catch (PDOException $e) {
@@ -197,8 +228,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // For this refactor, we assume if $_FILES['document_file'] is not set or empty, no file processing for update happens.
         // The database update for metadata only (no file change) during an 'update' action:
         try {
-            $sql_meta_update = "UPDATE documents SET category_id = ?, title = ?, description = ?, version = ?, language = ?, user_id = ? WHERE id = ?";
-            $params_meta_update = [$form_category_id, trim($_POST['title']), $form_description, $form_version, $form_language, $current_user_id, $posted_document_id];
+            $sql_meta_update = "UPDATE documents SET category_id = ?, title = ?, description = ?, version = ?, language = ?, user_id = ?, parent_id = ?, display_order = ? WHERE id = ?";
+$params_meta_update = [
+    $form_category_id,
+    trim($_POST['title']),
+    $form_description,
+    $form_version,
+    $form_language,
+    $current_user_id,
+    $form_parent_id,      // New value for parent_id
+    $form_display_order,  // New value for display_order
+    $posted_document_id
+];
             $stmt_meta = $pdo->prepare($sql_meta_update);
             $stmt_meta->execute($params_meta_update);
             $messages['success'] = "Document metadata updated successfully!";
@@ -347,6 +388,28 @@ if ($display_doc_form):
         <div class="form-group">
             <label for="doc_language">Language (Optional):</label>
             <input type="text" id="doc_language" name="language" value="<?php echo htmlspecialchars($form_language); ?>" placeholder="e.g., English, Greek">
+        </div>
+
+        <div class="form-group">
+    <label for="parent_id">Parent Document (for hierarchical view):</label>
+    <select id="parent_id" name="parent_id">
+        <option value="">-- No Parent (Top Level) --</option>
+        <?php
+        $stmt_parents = $pdo->query("SELECT id, title FROM documents ORDER BY title ASC");
+        while ($parent = $stmt_parents->fetch(PDO::FETCH_ASSOC)) {
+            // Make sure the document can't be its own parent if editing
+            if ($form_mode_doc === 'update' && $document_id === $parent['id']) continue;
+            
+            $selected = (isset($doc_to_edit) && $doc_to_edit['parent_id'] == $parent['id']) ? 'selected' : '';
+            echo "<option value=\"{$parent['id']}\" $selected>" . htmlspecialchars($parent['title']) . "</option>";
+        }
+        ?>
+            </select>
+        </div>
+
+        <div class="form-group">
+        <label for="display_order">Display Order:</label>
+        <input type="number" id="display_order" name="display_order" value="<?php echo isset($doc_to_edit) ? htmlspecialchars($doc_to_edit['display_order']) : '0'; ?>" placeholder="e.g., 0, 1, 2...">
         </div>
 
         <button type="submit" class="btn btn-primary"><?php echo $form_submit_button_text_doc; ?></button>

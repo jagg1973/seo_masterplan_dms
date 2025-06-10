@@ -44,6 +44,9 @@ if (isset($pdo)) { // Check if $pdo is available
             <li class="<?php echo ($current_page == 'dashboard.php') ? 'active' : ''; ?>">
                 <a href="dashboard.php">Dashboard</a>
             </li>     
+            <li class="<?php echo ($current_page == 'manage_dashboard.php') ? 'active' : ''; ?>">
+                <a href="manage_dashboard.php">Manage Dashboard</a>
+            </li>
             <li class="<?php echo ($current_page == 'manage_categories.php') ? 'active' : ''; ?>">
                 <a href="manage_categories.php">Manage Categories</a>
             </li>

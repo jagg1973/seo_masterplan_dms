@@ -535,3 +535,150 @@ a:hover {
     font-size: 0.9em;
     padding: 10px 15px;
 }
+
+.dashboard-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.dashboard-links ul {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+.dashboard-links ul li {
+    margin: 10px 0;
+}
+
+.dashboard-links ul li a {
+    text-decoration: none;
+    color: #337ab7;
+    font-size: 1.1em;
+}
+
+.dashboard-links ul li a:hover {
+    text-decoration: underline;
+}
+
+/* === New Dashboard Card Styles === */
+
+.dashboard-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 25px; /* Space between cards */
+}
+
+.dashboard-card {
+    background-color: var(--admin-content-background, #ffffff);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--admin-light-border-color, #e9ecef);
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+a.card-main-link {
+    text-decoration: none;
+    color: inherit;
+    text-align: center;
+    margin-bottom: 20px;
+}
+a.card-main-link:hover {
+    text-decoration: none;
+}
+
+.card-icon-wrapper {
+    font-size: 2.5em;
+    color: var(--default-primary-color, #007bff);
+    margin-bottom: 15px;
+}
+
+h3.card-title {
+    font-size: 1.25em;
+    font-weight: 600;
+    color: var(--admin-text-color, #343a40);
+    margin: 0;
+}
+
+.sub-card-container {
+    border-top: 1px solid var(--admin-light-border-color, #e9ecef);
+    padding-top: 15px;
+    margin-top: auto; /* Pushes sub-cards to the bottom */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sub-card {
+    display: flex;
+    align-items: center;
+    background-color: #f8f9fa; /* Slightly different background for sub-items */
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    color: #495057;
+}
+
+.sub-card:hover {
+    background-color: #e9ecef;
+    color: var(--default-primary-color, #007bff);
+    text-decoration: none;
+}
+
+.sub-card-icon {
+    margin-right: 12px;
+    font-size: 1em;
+    color: #6c757d; /* Muted icon color */
+    transition: color 0.2s ease;
+}
+
+.sub-card:hover .sub-card-icon {
+    color: var(--default-primary-color, #007bff);
+}
+
+.sub-card-title {
+    font-size: 0.95em;
+    font-weight: 500;
+}
+
+/* === Dashboard Download Button Styles === */
+
+.dashboard-main-actions {
+    margin-bottom: 25px;
+    text-align: right;
+}
+
+.btn-download-all {
+    padding: 12px 25px;
+    font-size: 1.1em;
+}
+
+.btn-download-all .fas {
+    margin-right: 10px;
+}
+
+.card-footer-actions {
+    border-top: 1px solid var(--admin-light-border-color, #e9ecef);
+    padding-top: 15px;
+    margin-top: 15px;
+    text-align: right;
+}
+
+.btn-download-folder {
+    font-size: 0.9em;
+    padding: 8px 15px;
+}
+
+.btn-download-folder .fas {
+    margin-right: 8px;
+}

@@ -22,10 +22,6 @@ if (!$category_param) {
     $error_message_page = "No category specified.";
 } else {
     // Map URL param to actual category name for querying
-    // This mapping should align with 'link_param' => 'Actual Category Name in DB'
-    // For simplicity, we'll assume the 'link_param' can be used to derive the name,
-    // or you directly store these link_params as slugs in your categories table.
-    // For now, let's try to find category by name based on a mapping.
     $category_name_map = [
         "c-level" => "C-Level Documents",
         "management" => "Management Level",
@@ -45,8 +41,11 @@ if (!$category_param) {
             $category_name_display = $category_data['name'];
             $category_description_display = $category_data['description']; // For display
 
+            // =======================================================================
+            // MODIFICATION 1: SQL query is updated to order for hierarchy.
+            // =======================================================================
             $stmt_docs = $pdo->prepare(
-                "SELECT * FROM documents WHERE category_id = ? ORDER BY title ASC"
+                 "SELECT * FROM documents WHERE category_id = ? ORDER BY parent_id, display_order, title ASC"
             );
             $stmt_docs->execute([$category_id]);
             $documents_for_category = $stmt_docs->fetchAll();
@@ -61,6 +60,84 @@ if (!$category_param) {
         $error_message_page = "Error fetching documents. Please try again later.";
         error_log("View Documents PDOException: " . $e->getMessage());
     }
+}
+
+// =======================================================================
+// ADDITION 1: Hierarchy helper functions are now part of this file.
+// =======================================================================
+/**
+ * Builds a hierarchical array from a flat array of documents.
+ * @param array $elements The flat array of documents.
+ * @param int|null $parentId The ID of the parent to start from.
+ * @return array The hierarchical array of documents.
+ */
+function build_doc_hierarchy(array $elements, $parentId = null) {
+    $branch = [];
+    foreach ($elements as $element) {
+        if ($element['parent_id'] == $parentId) {
+            $children = build_doc_hierarchy($elements, $element['id']);
+            if ($children) {
+                $element['children'] = $children;
+            }
+            $branch[] = $element;
+        }
+    }
+    return $branch;
+}
+
+/**
+ * Renders a hierarchical list of documents as nested HTML <ul> elements.
+ * @param array $documents The hierarchical array of documents.
+ */
+function render_doc_list(array $documents) {
+    echo '<ul class="document-list">';
+    foreach ($documents as $doc) {
+        $icon_class = get_file_icon_class($doc['filename_orig']);
+        ?>
+        <li class="document-item">
+            <div class="document-icon-type">
+                <i class="<?php echo htmlspecialchars($icon_class); ?>"></i>
+            </div>
+            <h4>
+                <a href="<?php echo htmlspecialchars(rtrim(UPLOAD_URL_PUBLIC, '/') . '/' . ltrim($doc['filepath'], '/')); ?>" download="<?php echo htmlspecialchars($doc['filename_orig']); ?>">
+                    <?php echo htmlspecialchars($doc['title']); ?>
+                </a>
+            </h4>
+            <div class="document-meta">
+                <?php if (!empty($doc['version'])): ?>
+                    <span><strong>Version:</strong> <?php echo htmlspecialchars($doc['version']); ?></span>
+                <?php endif; ?>
+                <?php if (!empty($doc['language'])): ?>
+                    <span><strong>Language:</strong> <?php echo htmlspecialchars($doc['language']); ?></span>
+                <?php endif; ?>
+                <span><strong>File:</strong> <?php echo htmlspecialchars($doc['filename_orig']); ?></span>
+            </div>
+            <?php if (!empty($doc['description'])): ?>
+                <p class="document-description"><?php echo nl2br(htmlspecialchars($doc['description'])); ?></p>
+            <?php endif; ?>
+           <div class="document-actions">
+                <button type="button" class="btn btn-secondary view-document-btn"
+                        data-filepath="<?php echo htmlspecialchars(rtrim(UPLOAD_URL_PUBLIC, '/') . '/' . ltrim($doc['filepath'], '/')); ?>"
+                        data-filename="<?php echo htmlspecialchars($doc['filename_orig']); ?>"
+                        data-fileext="<?php echo htmlspecialchars(strtolower(pathinfo($doc['filename_orig'], PATHINFO_EXTENSION))); ?>">
+                    <i class="fas fa-eye"></i> View
+                </button>
+                <a href="<?php echo htmlspecialchars(rtrim(UPLOAD_URL_PUBLIC, '/') . '/' . ltrim($doc['filepath'], '/')); ?>" class="download-button" download="<?php echo htmlspecialchars($doc['filename_orig']); ?>">
+                    <i class="fas fa-download"></i> Download
+                </a>
+            </div>
+            <?php
+            // Recursive call to render children if they exist
+            if (!empty($doc['children'])) {
+                echo '<div class="document-children-container">';
+                render_doc_list($doc['children']);
+                echo '</div>';
+            }
+            ?>
+        </li>
+        <?php
+    }
+    echo '</ul>';
 }
 
 // Fetch branding for consistency
@@ -79,22 +156,22 @@ if (empty($primary_color) || !preg_match('/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/',
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="apple-touch-icon" sizes="57x57" href="https://speed.cy/images/favicon/apple-icon-57x57.png">
-<link rel="apple-touch-icon" sizes="60x60" href="https://speed.cy/images/favicon/apple-icon-60x60.png">
-<link rel="apple-touch-icon" sizes="72x72" href="https://speed.cy/images/favicon/apple-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="76x76" href="https://speed.cy/images/favicon/apple-icon-76x76.png">
-<link rel="apple-touch-icon" sizes="114x114" href="https://speed.cy/images/favicon/apple-icon-114x114.png">
-<link rel="apple-touch-icon" sizes="120x120" href="https://speed.cy/images/favicon/apple-icon-120x120.png">
-<link rel="apple-touch-icon" sizes="144x144" href="https://speed.cy/images/favicon/apple-icon-144x144.png">
-<link rel="apple-touch-icon" sizes="152x152" href="https://speed.cy/images/favicon/apple-icon-152x152.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://speed.cy/images/favicon/apple-icon-180x180.png">
-<link rel="icon" type="image/png" sizes="192x192" href="https://speed.cy/images/favicon/android-icon-192x192.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://speed.cy/images/favicon/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="96x96" href="https://speed.cy/images/favicon/favicon-96x96.png">
-<link rel="icon" type="image/png" sizes="16x16" href="https://speed.cy/images/favicon/favicon-16x16.png">
-<link rel="manifest" href="https://speed.cy/images/favicon/manifest.json">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+<link rel="manifest" href="/images/favicon/manifest.json">
 <meta name="msapplication-TileColor" content="#ffffff">
-<meta name="msapplication-TileImage" content="https://speed.cy/images/favicon/ms-icon-144x144.png">
+<meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
 <meta name="theme-color" content="#ffffff">
     <title><?php echo htmlspecialchars($category_name_display); ?> - <?php echo htmlspecialchars(SITE_NAME); ?></title>
     <link rel="stylesheet" href="assets/css/client_style.css">
@@ -167,56 +244,28 @@ if (empty($primary_color) || !preg_match('/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/',
         <?php endif; ?>
 
         <?php if (!empty($error_message_page) && empty($documents_for_category)): // Show error if it's set and no docs (covers "no docs in cat" too) ?>
-            <div class="category-section" style="text-align: center; background: none; border: none; box-shadow: none;">
-                 <?php /* Using existing .category-section for some spacing if preferred, or a new class */ ?>
+            <div class="empty-table-message">
                 <p><?php echo htmlspecialchars($error_message_page); ?></p>
             </div>
         <?php endif; ?>
 
-        <?php if (!empty($documents_for_category)): ?>
-            <ul class="document-list">
-                <?php foreach ($documents_for_category as $doc): 
-                    $icon_class = get_file_icon_class($doc['filename_orig']);
-                    ?>
-                    
-                    <li class="document-item">
-        <div class="document-icon-type"> <?php // New wrapper for icon ?>
-             <i class="<?php echo htmlspecialchars($icon_class); ?>"></i>
-        </div>
-        <h4>
-            <a href="<?php echo htmlspecialchars(rtrim(UPLOAD_URL_PUBLIC, '/') . '/' . ltrim($doc['filepath'], '/')); ?>" download="<?php echo htmlspecialchars($doc['filename_orig']); ?>">
-                <?php echo htmlspecialchars($doc['title']); ?>
-            </a>
-        </h4>
-        <div class="document-meta">
-            <?php if (!empty($doc['version'])): ?>
-                <span><strong>Version:</strong> <?php echo htmlspecialchars($doc['version']); ?></span>
-            <?php endif; ?>
-            <?php if (!empty($doc['language'])): ?>
-                <span><strong>Language:</strong> <?php echo htmlspecialchars($doc['language']); ?></span>
-            <?php endif; ?>
-            <span><strong>File:</strong> <?php echo htmlspecialchars($doc['filename_orig']); ?></span>
-        </div>
-        <?php if (!empty($doc['description'])): ?>
-            <p class="document-description"><?php echo nl2br(htmlspecialchars($doc['description'])); ?></p>
-        <?php endif; ?>
+        <?php if (!empty($documents_for_category)):
+            // =======================================================================
+            // MODIFICATION 2: Build and render the hierarchy.
+            // =======================================================================
+            $document_hierarchy = build_doc_hierarchy($documents_for_category);
 
-       <div class="document-actions">
-    <button type="button" class="btn btn-secondary view-document-btn" 
-            data-filepath="<?php echo htmlspecialchars(rtrim(UPLOAD_URL_PUBLIC, '/') . '/' . ltrim($doc['filepath'], '/')); ?>"
-            data-filename="<?php echo htmlspecialchars($doc['filename_orig']); ?>"
-            data-fileext="<?php echo htmlspecialchars(strtolower(pathinfo($doc['filename_orig'], PATHINFO_EXTENSION))); ?>">
-        <i class="fas fa-eye"></i> View
-    </button>
-    <a href="<?php echo htmlspecialchars(rtrim(UPLOAD_URL_PUBLIC, '/') . '/' . ltrim($doc['filepath'], '/')); ?>" class="download-button" download="<?php echo htmlspecialchars($doc['filename_orig']); ?>">
-        <i class="fas fa-download"></i> Download
-    </a>
-</div>
-    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php elseif (empty($error_message_page)): // If no specific error, but also no documents (should be caught by error_message_page above) ?>
-            <p>No documents currently available in this category.</p>
+            if (!empty($document_hierarchy)) {
+                render_doc_list($document_hierarchy);
+            } else {
+                // This handles cases where documents exist but none are top-level (all have a parent_id)
+                // which might indicate an orphaned data structure.
+                echo '<div class="empty-table-message"><p>No top-level documents found to display.</p></div>';
+            }
+        ?>
+        <?php elseif (empty($error_message_page)):
+             echo '<div class="empty-table-message"><p>No documents are currently available in this category.</p></div>';
+        ?>
         <?php endif; ?>
     </main>
 
