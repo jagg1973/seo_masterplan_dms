@@ -10,24 +10,18 @@ error_reporting(E_ALL);
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 $host = $_SERVER['HTTP_HOST'];
 
-// Determine Project Root Path relative to Document Root
-// SCRIPT_NAME is like /seo_masterplan_dms/admin/some_script.php or /seo_masterplan_dms/index.php
-$script_directory = dirname($_SERVER['SCRIPT_NAME']); // e.g., /seo_masterplan_dms/admin or /seo_masterplan_dms
+// Determine Project Root URL Path based on server paths
+$project_root_on_server = dirname(__DIR__); // Server path to the project's root directory (seo_masterplan_dms)
+$doc_root = rtrim($_SERVER['DOCUMENT_ROOT'], '/\\'); // Server's document root
 
-// If the script is in 'admin' or 'public', the project root is one level up
-if (basename($script_directory) === 'admin' || basename($script_directory) === 'public') {
-    $project_root_url_path = dirname($script_directory);
-} else {
-    $project_root_url_path = $script_directory;
+$project_root_url_path = '';
+// If the project is in a subdirectory of the document root, get that subdirectory path
+if (strpos($project_root_on_server, $doc_root) === 0 && strlen($project_root_on_server) > strlen($doc_root)) {
+    $project_root_url_path = substr($project_root_on_server, strlen($doc_root));
 }
-
-// Normalize: remove trailing slash for consistency, unless it's the web root "/"
-$project_root_url_path = rtrim($project_root_url_path, '/\\');
-if ($project_root_url_path === '') {
-    $project_root_url_path = '/'; // App is in the web root
-}
-
-define('BASE_URL', $protocol . $host . ($project_root_url_path === '/' ? '' : $project_root_url_path));
+// Ensure forward slashes and no trailing slash for BASE_URL if it's just the host.
+// $project_root_url_path will be like "/seo_masterplan_dms" or "" if at web root.
+define('BASE_URL', $protocol . $host . str_replace('\\', '/', $project_root_url_path));
 
 // Define server path for uploads (for PHP file operations)
 // __DIR__ is the directory of the current file (config.php), so dirname(__DIR__) is the project root.
@@ -39,6 +33,9 @@ define('UPLOAD_URL_PUBLIC', BASE_URL . '/uploads/');
 
 // Site Name
 define('SITE_NAME', 'SEO Masterplan DMS');
+
+// Company Name (for legal pages, etc.)
+define('COMPANY_NAME', 'M&G Speed Marketing LTD.');
 
 // Admin path URL
 define('ADMIN_URL', BASE_URL . '/admin');

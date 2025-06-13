@@ -36,7 +36,7 @@ h2.section-title { font-size: 1.8em; font-weight: 700; color: var(--headings-col
 .client-header-redesigned { background-color: var(--container-background); padding: 15px 0; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
 .header-container { display: flex; align-items: center; justify-content: space-between; }
 .logo-and-title { display: flex; align-items: center; text-decoration: none; }
-.header-logo { max-height: 45px; margin-right: 15px; }
+.header-logo { max-height: 90px; margin-right: 15px; } /* Increased max-height */
 .site-title { font-size: 1.5em; font-weight: 600; color: var(--headings-color); }
 .client-search-form { position: relative; flex-grow: 1; max-width: 450px; margin: 0 30px; }
 .client-search-form .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted-color); }
@@ -60,36 +60,247 @@ h2.section-title { font-size: 1.8em; font-weight: 700; color: var(--headings-col
 .hero-title { font-size: 2.8em; font-weight: 700; margin: 0 0 10px 0; }
 .hero-subtitle { font-size: 1.2em; opacity: 0.8; max-width: 600px; margin: 0 auto; }
 
-/* === Animated Border Cards === */
-@property --angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
-@keyframes animated-border-spin { to { --angle: 360deg; } }
-.dashboard-card.animated-border-card { position: relative; background-color: transparent; padding: 3px; border: none; border-radius: 14px; }
-.dashboard-card.animated-border-card::before { content: ''; position: absolute; top: 0; left: 0; z-index: 0; width: 100%; height: 100%; border-radius: 14px; background: conic-gradient(from var(--angle), var(--primary-color), var(--neon-purple), var(--neon-blue), var(--primary-color)); animation: animated-border-spin 4s linear infinite; }
-.card-content-wrapper { background: var(--container-background); border-radius: 12px; position: relative; z-index: 1; width: 100%; height: 100%; display: flex; flex-direction: column; }
-.dashboard-grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
-.interactive-card .card-header { display: flex; align-items: center; padding: 20px; transition: background-color 0.2s ease; }
-a.card-header {text-decoration: none; color: inherit; }
-a.card-header:hover { background-color: #f8f9fa; }
-.card-header.is-container { cursor: default; }
-.interactive-card .card-icon-wrapper { font-size: 1.8em; color: var(--primary-color); margin-right: 15px; }
-.interactive-card .card-title { flex-grow: 1; text-align: left; font-size: 1.2em; font-weight: 600; }
-.toggle-children-btn { background: transparent; border: 1px solid var(--border-color); border-radius: 50%; width: 30px; height: 30px; font-size: 1em; cursor: pointer; color: var(--text-muted-color); transition: all 0.3s; }
-.toggle-children-btn:hover { color: var(--primary-color); background-color: var(--light-border-color); }
-.collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out; border-top: 1px solid var(--light-border-color); }
-.sub-card-container { padding: 15px 20px; }
-.interactive-sub-card { display: flex; align-items: center; padding: 10px; border-radius: 6px; margin-bottom: 5px; }
-.interactive-sub-card:hover { background-color: #f1f4f8; }
-.interactive-sub-card .sub-card-icon { margin-right: 10px; color: var(--text-muted-color); }
-.interactive-sub-card .sub-card-title { flex-grow: 1; font-weight: 500; }
-.sub-card-actions { display: flex; gap: 10px; margin-left: auto; }
-.btn-preview, .btn-download { font-size: 0.85em; padding: 6px 12px; text-decoration: none; border-radius: 5px; border: 1px solid var(--border-color); cursor: pointer; transition: all 0.2s ease; }
-.btn-preview { background-color: white; color: var(--text-color); }
-.btn-preview:hover { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
-.btn-download { background-color: #f8f9fa; color: var(--text-color); }
-.no-sub-items { padding: 15px; text-align: center; color: var(--text-muted-color); }
-.card-footer-actions { text-align: center; padding: 15px 20px; border-top: 1px solid var(--light-border-color); margin-top: auto; }
-.btn-download-folder { text-decoration: none; font-weight: 500; color: var(--text-muted-color); }
-.btn-download-folder:hover { color: var(--primary-color); }
+/* === Professional Document Card Styles === */
+.document-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.document-card {
+    position: relative; /* Needed for the pseudo-element border */
+    background-color: var(--container-background);
+    /* border: 1px solid var(--border-color); */ /* Replaced by animated border */
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    overflow: hidden; /* Ensures border-radius clips the ::before element */
+}
+
+.document-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 8px; /* Match parent's border-radius */
+    padding: 2px; /* Thickness of the gradient border */
+    background: linear-gradient(60deg, #e0e7ff, #c7d2fe, #a5b4fc, #818cf8); /* Light gradient example */
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    z-index: -1; /* Place it behind the card's content */
+    animation: animated-gradient-border 4s ease infinite alternate;
+}
+
+.document-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+}
+
+@keyframes animated-gradient-border {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+.document-card-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--light-border-color); /* Use lighter border for internal elements */
+    background-color: #fcfdff;
+}
+
+.document-card-icon {
+    font-size: 1.2em;
+    color: var(--primary-color);
+    margin-right: 10px;
+    min-width: 20px;
+    text-align: center;
+    line-height: 1;
+}
+
+.document-card-title {
+    flex-grow: 1;
+    font-weight: 500;
+    font-size: 1.1em;
+    margin: 0;
+    color: var(--headings-color);
+}
+.document-card-title-link, .document-child-title-link {
+    text-decoration: none;
+    color: inherit;
+}
+.document-card-title-link:hover, .document-child-title-link:hover {
+    color: var(--primary-hover-color);
+    text-decoration: underline;
+}
+
+.document-card-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9em;
+    color: var(--text-muted-color);
+    padding: 5px;
+    margin-left: auto;
+    transition: transform 0.3s ease, color 0.2s ease;
+}
+.document-card-toggle:hover {
+    color: var(--primary-color);
+}
+.document-card-toggle i {
+    transition: transform 0.3s ease;
+}
+
+.collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease-in-out;
+    background-color: #f9fafb;
+}
+
+.document-card-children {
+    padding: 10px 15px;
+}
+
+.document-child-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--light-border-color);
+}
+.document-child-item:last-child {
+    border-bottom: none;
+}
+.document-child-icon {
+    font-size: 1em;
+    color: var(--text-muted-color);
+    margin-right: 10px;
+    min-width: 18px;
+    text-align: center;
+}
+.document-child-title {
+    flex-grow: 1;
+    font-size: 0.95em;
+    color: var(--text-color);
+}
+.document-child-actions {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+}
+.document-child-actions .btn-preview,
+.document-child-actions .btn-download {
+    font-size: 0.85em;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: var(--container-background);
+    color: var(--text-muted-color);
+}
+.document-child-actions .btn-preview:hover,
+.document-child-actions .btn-download:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+.document-child-actions i {
+    font-size: 0.9em;
+    margin-right: 3px;
+}
+
+.document-card-toggle[aria-expanded="true"] i {
+    transform: rotate(90deg);
+}
+
+.document-card-grid .empty-table-message {
+    padding: 30px 0;
+    text-align: center;
+    color: var(--text-muted-color);
+    grid-column: 1 / -1;
+    background-color: var(--container-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.document-card-footer {
+    padding: 12px 15px;
+    border-top: 1px solid var(--light-border-color);
+    margin-top: auto;
+    background-color: #fcfdff;
+    display: flex; /* Use flexbox for layout */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+}
+.document-card-footer.single-doc-actions {
+    display: flex;
+    flex-wrap: wrap; /* Ensures items wrap inside the container */
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.document-card-footer .btn-download-folder {
+    display: inline-block; /* Ensure it behaves like a button and sizes to content */
+    /* width: 100%; */ /* Removed as inline-block sizes to content */
+    font-size: 0.9em;
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    border: 1px solid var(--primary-color);
+    background-color: var(--primary-color);
+    color: white;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.document-card-footer .btn-download-folder:hover {
+    background-color: var(--primary-hover-color);
+    border-color: var(--primary-hover-color);
+}
+
+.document-card-footer .btn-download-folder i {
+    margin-right: 8px;
+}
+
+.document-card-footer.single-doc-actions .btn-preview,
+.document-card-footer.single-doc-actions .btn-download {
+    font-size: 0.85em;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: var(--container-background);
+    color: var(--text-muted-color);
+}
+
+.document-card-footer.single-doc-actions .btn-preview:hover,
+.document-card-footer.single-doc-actions .btn-download:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.document-card-footer.single-doc-actions i {
+    margin-right: 3px;
+}
 
 /* === Account & Support Page Styles === */
 .account-container { display: grid; grid-template-columns: 1fr; gap: 30px; max-width: 800px; margin: 30px auto; }
@@ -116,22 +327,17 @@ a.card-header:hover { background-color: #f8f9fa; }
 }
 .dms-form-submit-button:hover { background: var(--primary-hover-color) !important; border-color: var(--primary-hover-color) !important; box-shadow: 0 6px 20px -5px rgba(0, 0, 0, 0.4) !important; transform: translateY(-2px) !important; }
 
-/* ID-specific overrides for problematic buttons */
-/* These ensure the background and text color are applied with highest specificity */
-/* The .dms-form-submit-button class should still apply other styles like padding, font-size etc. */
 #supportSendRequestBtn,
 #accountUpdatePasswordBtn {
     background: var(--primary-color) !important;
-    border-color: var(--primary-color) !important; /* Match border with background */
+    border-color: var(--primary-color) !important;
 }
 
-/* Ensure hover styles for ID'd buttons also use variables */
 #supportSendRequestBtn:hover,
 #accountUpdatePasswordBtn:hover {
     background: var(--primary-hover-color) !important;
     border-color: var(--primary-hover-color) !important;
 }
-
 
 /* === Footer, Modal & Other Components === */
 .client-footer-redesigned { background-color: #2c3e50; color: #bdc3c7; padding-top: 50px; margin-top: 60px; }

@@ -18,7 +18,10 @@ try {
         $stmt_parent = $pdo->prepare("SELECT title FROM dashboard_links WHERE id = ?");
         $stmt_parent->execute([$parent_id]);
         $parent_title = $stmt_parent->fetchColumn();
-        $zip_filename = str_replace(' ', '_', $parent_title) . '_Documents.zip';
+        // Sanitize title for filename
+        $safe_parent_title = preg_replace('/[^a-zA-Z0-9_\-]/', '', str_replace(' ', '_', $parent_title ?? 'Folder'));
+        $zip_filename = $safe_parent_title . '_Documents.zip';
+
 
         // 2. Get all child links associated with this parent
         $stmt_children = $pdo->prepare("SELECT url FROM dashboard_links WHERE parent_id = ?");
@@ -27,8 +30,7 @@ try {
 
         // 3. From the URLs, extract the document filepaths and fetch from DB
         if (!empty($child_urls)) {
-            $base_upload_url = rtrim(BASE_URL, '/') . '/uploads/';
-            $placeholders = rtrim(str_repeat('?,', count($child_urls)), ',');
+            $base_upload_url = rtrim(UPLOAD_URL_PUBLIC, '/') . '/'; // Use UPLOAD_URL_PUBLIC from config
             $filepaths = [];
             foreach ($child_urls as $url) {
                 if (strpos($url, $base_upload_url) === 0) {
@@ -36,6 +38,7 @@ try {
                 }
             }
             if(!empty($filepaths)){
+                $placeholders = rtrim(str_repeat('?,', count($filepaths)), ',');
                 $sql = "SELECT filename_orig, filepath FROM documents WHERE filepath IN ($placeholders)";
                 $stmt_docs = $pdo->prepare($sql);
                 $stmt_docs->execute($filepaths);
@@ -55,7 +58,9 @@ try {
 
     // --- Create and send the ZIP file ---
     $zip = new ZipArchive();
-    if ($zip->open($zip_filename, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+    $temp_zip_path = tempnam(sys_get_temp_dir(), 'admin_dmszip'); // Create a temporary file
+
+    if ($zip->open($temp_zip_path, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
         foreach ($documents_to_zip as $doc) {
             $file_on_server = UPLOAD_DIR_SERVER . $doc['filepath'];
             if (file_exists($file_on_server)) {
@@ -67,13 +72,13 @@ try {
         // Send headers and stream the file
         header('Content-Type: application/zip');
         header('Content-Disposition: attachment; filename="' . basename($zip_filename) . '"');
-        header('Content-Length: ' . filesize($zip_filename));
+        header('Content-Length: ' . filesize($temp_zip_path));
         header('Pragma: no-cache');
         header('Expires: 0');
-        readfile($zip_filename);
+        readfile($temp_zip_path);
         
         // Clean up the temporary zip file
-        unlink($zip_filename);
+        unlink($temp_zip_path);
         exit;
     } else {
         die('Failed to create the ZIP file.');
